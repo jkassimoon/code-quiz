@@ -1,5 +1,6 @@
 var userScore = 0;
 var highScore = 0;
+var highScorers = [];
 var timeLeft = 100;
 
 var questionNumber = 0;
@@ -62,7 +63,6 @@ function myTimer() {
 
   $("#time-left").html("Time left: " + timeLeft);
   timeLeft--;
-
 }
 
 function nextQuestion() {
@@ -76,7 +76,6 @@ function nextQuestion() {
   $("#question-display").empty();
   $("#question-display").html(quizQuestions[questionNumber].question);
   answerButtons();
-
 }
 
 function answerButtons() {
@@ -105,8 +104,6 @@ function answerButtons() {
   });
 };
 
-var highScorers = [];
-
 function endGame() {
     var endText = '';
     if (userScore === 50) {
@@ -125,41 +122,36 @@ function endGame() {
         $("#high-score-div").html("<h1>Game Over!</h1> <input id=\"new-username\" type=\"text\" placeholder=\"Your Name\"> <button id=\"submit-button\">Enter</button> <div id=\"name-list\"></div>");
         
         function addName() {
-
             var newUserName = $("#new-username").val();
+
             highScorers.push(
                 {name: newUserName,
                 score: userScore}
             );
-            console.log(highScorers);
+
             $("#name-list").html("");
+            highScorers.sort(function(a, b){return b.score-a.score});
+            
             for (var i = 0; i < highScorers.length; i++) {
-                $("#name-list").append(highScorers[i].name + " - " + highScorers[i].score + "pts <br>");
+                $("#name-list").append(highScorers[i].name + ": " + highScorers[i].score + "pts <br>");
             }
 
-            // Clear the content of the input box.
             $("#new-username").val("");
         }
 
-        $("button").click(addName);
+        $("#submit-button").click(addName);
           
         $("#new-username").keypress(function(event) {
             if (event.which === 13) {
                 addName();
             }
         });
-
-        
-
-
     }
 
     nameList();
-    // <button id="start-button">Start the Quiz!</button>
     $("#start-button").html("Go Again?");
 
     inGame = false;
-    //   userScore = 0;
     questionNumber = 0;
     timeLeft = 100;
     $("#multi-choices").empty();
@@ -167,11 +159,3 @@ function endGame() {
     $("#start-button").show();
     $("#time-left").hide();
 }
-
-  //Player clicks start button 
-  //start button disappears & question #1 displays
-  //user has 15 seconds to answer, decrease 1 second from counter every second.
-  //if user selects a correct answer then increase correct counter by 1pt and move on to question #2
-  //if user selects an incorrect answer or exhausts all 15 seconds,then it reduces score counter by 1pt and it moves on to question #2
-  //when user finishes question 5, then the screen displays final stats.
-  //user can click restart with the restart button.
