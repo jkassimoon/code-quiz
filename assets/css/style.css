@@ -1,6 +1,9 @@
 body {
-    background-color: powderblue;
+    background-color: darkcyan;
     text-align: center;
     font-family: cursive;
 }
 
+button {
+    background-color: powderblue;
+}

@@ -1,9 +1,11 @@
 var userScore = 0;
-var timeLeft = 15;
+var highScore = 0;
+var timeLeft = 100;
 
 var questionNumber = 0;
-var firstGame = true;
 var inGame = false;
+
+var userName;
 
 var quizQuestions = [
   {
@@ -30,16 +32,16 @@ var quizQuestions = [
     question: "How do you generate a random whole number from 1 to 15?",
     choices: ["Math.floor(Math.random() * 15) +1;", "Math.round(Math.random() * 15);", "Math.round(Math.random() * 14) +1;"],
     answer: "Math.floor(Math.random() * 15) +1;"
-  }
+  },
 ]
 
 $("#start-button").on("click", function () {
 
   inGame = true;
-  if (firstGame) {
-    setInterval(myTimer, 1000);
-    firstGame = false;
-  }
+  $("#high-score-div").html("<h1>JavaScript Fundamentals Quiz:</h1> <h2>How well do you know your JavaScript?</h2>");
+  userScore = 0;
+
+  setInterval(myTimer, 1000);
   
   $("#question-display").html(quizQuestions[questionNumber].question);
   answerButtons();  
@@ -49,35 +51,31 @@ $("#start-button").on("click", function () {
   $("#score").html("Score: " + userScore);
 });
 
-
 function myTimer() {
   if (!inGame) {
     return;
   }
   if (timeLeft == 0) {
-    userScore--;
-    nextQuestion();
+    endGame();
+    return;
   }
-  $("#time-left").html("Time left: " + timeLeft);
 
+  $("#time-left").html("Time left: " + timeLeft);
   timeLeft--;
 
 }
 
 function nextQuestion() {
-  $("#score").html("Score: " + userScore + "0");
-
   questionNumber++;
-  timeLeft = 15;
+
   if (questionNumber >= quizQuestions.length) {
-    endGame();
-    return;
-  }
+        endGame();
+        return;
+    }
 
   $("#question-display").empty();
   $("#question-display").html(quizQuestions[questionNumber].question);
   answerButtons();
-  timeLeft = 15;
 
 }
 
@@ -90,39 +88,84 @@ function answerButtons() {
     createButton.on('click', function () {
 
       if (element === quizQuestions[questionNumber].answer) {
-        userScore++
+        userScore = userScore + 10;
+        $("#try-again").html("");
+        console.log("user score is " + userScore);
         nextQuestion();
       }
       else {
-        userScore--;
+        userScore = userScore - 10;
         timeLeft--;
-        $("#correct-incorrect").html("Incorrect! Try again.");
+        $("#try-again").html("Incorrect! Try again.");
+        console.log("user score is " + userScore);
       }
+      $("#score").html("Score: " + userScore);
     })
     $("#multi-choices").append(createButton);
   });
 };
 
+var highScorers = [];
+
 function endGame() {
-  var endText = '';
-  if (userScore === 0) {
-    endText = 'You failed! Try again next time.';
-  } else if (userScore < 0) {
-    endText = 'Negative score? How could you fail so badly?';
-  } else if (userScore > 500000000000000000000000) {
-    endText = 'High Score!';
-  } else {
-    endText = 'Great job!';
-  }
-  $("#correct-incorrect").html(endText);
-  inGame = false;
-  userScore = 0;
-  questionNumber = 0;
-  timeLeft = 15;
-  $("#multi-choices").empty();
-  $("#question-display").empty();
-  $("#start-button").show();
-  $("#time-left").hide();
+    var endText = '';
+    if (userScore === 50) {
+        endText = "Perfect score!";
+    } else if (userScore === 0) {
+        endText = "You scored exactly 0. Not sure if I should be impressed..";
+    } else if (userScore < 0) {
+        endText = "Negative score? How could you fail so badly??";
+    } else {
+        endText = "Good job!";    
+    }
+
+    $("#try-again").html(endText);
+    
+    function nameList () {
+        $("#high-score-div").html("<h1>Game Over!</h1> <input id=\"new-username\" type=\"text\" placeholder=\"Your Name\"> <button id=\"submit-button\">Enter</button> <div id=\"name-list\"></div>");
+        
+        function addName() {
+
+            var newUserName = $("#new-username").val();
+            highScorers.push(
+                {name: newUserName,
+                score: userScore}
+            );
+            console.log(highScorers);
+            $("#name-list").html("");
+            for (var i = 0; i < highScorers.length; i++) {
+                $("#name-list").append(highScorers[i].name + " - " + highScorers[i].score + "pts <br>");
+            }
+
+            // Clear the content of the input box.
+            $("#new-username").val("");
+        }
+
+        $("button").click(addName);
+          
+        $("#new-username").keypress(function(event) {
+            if (event.which === 13) {
+                addName();
+            }
+        });
+
+        
+
+
+    }
+
+    nameList();
+    // <button id="start-button">Start the Quiz!</button>
+    $("#start-button").html("Go Again?");
+
+    inGame = false;
+    //   userScore = 0;
+    questionNumber = 0;
+    timeLeft = 100;
+    $("#multi-choices").empty();
+    $("#question-display").empty();
+    $("#start-button").show();
+    $("#time-left").hide();
 }
 
   //Player clicks start button 
