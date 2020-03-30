@@ -1,5 +1,4 @@
 var userScore = 0;
-var highScore = 0;
 var highScorers = [];
 var timeLeft = 100;
 
@@ -10,22 +9,22 @@ var userName;
 
 var quizQuestions = [
   {
-    question: "What is NOT a type of value you cannot store in a variable?",
+    question: "What is <u>NOT</u> a type of value you cannot store in a variable?",
     choices: ["bouillon", "string", "number"],
     answer: "bouillon"
   },
   {
-    question: "Which of the following must be closed with a ;?",
+    question: "Which of the following must be closed with a \";\"(a semicolon)?",
     choices: ["if/else", "for loop", "console log"],
     answer: "console log"
   },
   {
-    question: "Which of the follow is the correct way to push an element called \"element\" into an array called \"myArray?\"",
+    question: "How do you push an element called \"element\" into an array called \"myArray?\"",
     choices: ["element.push.(myArray);", "myArray.push(element);", "push (element, myArray) {}"],
     answer: "myArray.push(element);" 
   },
   {
-    question: "Which value type is NOT like the other?",
+    question: "Which value TYPE is <u>NOT</u> like the other?",
     choices: ["13", "31", "\"13\""],
     answer: "\"13\""
   },
@@ -109,7 +108,7 @@ function endGame() {
     if (userScore === 50) {
         endText = "Perfect score!";
     } else if (userScore === 0) {
-        endText = "You scored exactly 0. Not sure if I should be impressed..";
+        endText = "You scored exactly 0. Should I be impressed..?";
     } else if (userScore < 0) {
         endText = "Negative score? How could you fail so badly??";
     } else {
@@ -131,7 +130,7 @@ function endGame() {
 
             $("#name-list").html("");
             highScorers.sort(function(a, b){return b.score-a.score});
-            
+
             for (var i = 0; i < highScorers.length; i++) {
                 $("#name-list").append(highScorers[i].name + ": " + highScorers[i].score + "pts <br>");
             }
